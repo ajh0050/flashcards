@@ -11,7 +11,7 @@ describe('Turn', function() {
       expect(Turn).to.be.a('function');
     });
   
-    it('should be an instance of Card', function() {
+    it('should be an instance of turn', function() {
       const turn = new Turn();
       expect(turn).to.be.an.instanceof(Turn);
     }); 
