@@ -1,62 +1,73 @@
-const chai = require('chai');
-const expect = chai.expect;
+const chai = require('chai')
+const Card = require('../src/Card')
+const expect = chai.expect
 
-const Turn = require('../src/Turn');
-const Card = require('../src/Card');
+const Turn = require('../src/Turn')
 
-describe('Turn', function() {
+let turn1
+let turn2
 
-    it('should be a function', function() {
-      const turn = new Turn();
-      expect(Turn).to.be.a('function');
-    });
-  
-    it('should be an instance of turn', function() {
-      const turn = new Turn();
-      expect(turn).to.be.an.instanceof(Turn);
-    }); 
-  
-    it('stores users guess to the question', function() {
-      const card = new Card(1, 'What allows you to define a set of related information using key-value pairs?', ['object', 'array', 'function'], 'object');
-      const turn = new Turn('object');
-      expect(turn.guess).to.equal('object');
-    });  
-  
-    it('stores current card', function() {
-        const card = new Card(1, 'What allows you to define a set of related information using key-value pairs?', ['object', 'array', 'function'], 'object');
-        const turn = new Turn('object', card);
-        expect(turn.card).to.deep.equal(card);
-    });  
+beforeEach(() => {
+  const card1 = new Card(
+    1,
+    'what is your favorite cold drink?',
+    ['iced tea', 'sparkling water', 'smoothie'],
+    'smoothie'
+  )
 
-    it('returnGuess method returns the users guess', function() {
-        const card = new Card(1, 'What allows you to define a set of related information using key-value pairs?', ['object', 'array', 'function'], 'object');
-        const turn = new Turn('object', card);
-        expect(turn.returnGuess()).to.equal('object');
-    });
+  const card2 = new Card(
+    2,
+    'what is your favorite cold drink?',
+    ['iced tea', 'sparkling water', 'smoothie'],
+    'iced tea'
+  )
 
-    it('returnCard method returns the current card', function() {
-        const card = new Card(1, 'What allows you to define a set of related information using key-value pairs?', ['object', 'array', 'function'], 'object');
-        const turn = new Turn('object', card);
-        expect(turn.returnCard()).to.deep.equal(card);
-    });
+  turn1 = new Turn('smoothie', card1)
+  turn2 = new Turn('sparkling water', card2)
+})
 
-    it('evaluateGuess method returns true if the users guess matches the correct answer on the card', function() {
-        const card = new Card(1, 'What allows you to define a set of related information using key-value pairs?', ['object', 'array', 'function'], 'object');
-        const turn = new Turn('object', card);
-        expect(turn.evaluateGuess()).to.equal(true);
-    });
-  
-    it('evaluateGuess method returns false if the users guess matches the correct answer on the card', function() {
-        const card = new Card(1, 'What allows you to define a set of related information using key-value pairs?', ['object', 'array', 'function'], 'object');
-        const turn = new Turn('array', card);
-        expect(turn.evaluateGuess()).to.equal(false);
-    });
+describe('Turn', () => {
+  it('should be a function', () => {
+    expect(Turn).to.be.a('function')
+  })
 
-    it('giveFeedback method returns either "incorrect!" or "correct!" based on whether the guess is correct or not', function() {
-        const card = new Card(1, 'What allows you to define a set of related information using key-value pairs?', ['object', 'array', 'function'], 'object');
-        const trueTurn = new Turn('object', card);
-        const falseTurn = new Turn('array', card)
-        expect(trueTurn.giveFeedback()).to.equal('correct!');
-        expect(falseTurn.giveFeedback()).to.equal('incorrect!');
-    });
-  });
+  it('should be an instance of Turn', () => {
+    expect(turn1).to.be.an.instanceOf(Turn)
+  })
+
+  it('should take in a guess as an argument and set it as a property', () => {
+    expect(turn1.currentGuess).to.equal('smoothie')
+  })
+
+  it('should take in a card as an argument and set it as a property', () => {
+    expect(turn1.currentCard).to.deep.equal({
+      id: 1,
+      question: 'what is your favorite cold drink?',
+      answers: ['iced tea', 'sparkling water', 'smoothie'],
+      correctAnswer: 'smoothie',
+    })
+  })
+
+  it('should have a method that returns the current guess', () => {
+    expect(turn1.returnGuess()).to.equal('smoothie')
+  })
+
+  it('should have a method that returns the current card', () => {
+    expect(turn1.returnCard()).to.deep.equal({
+      id: 1,
+      question: 'what is your favorite cold drink?',
+      answers: ['iced tea', 'sparkling water', 'smoothie'],
+      correctAnswer: 'smoothie',
+    })
+  })
+
+  it('should have a method that returns if the current guess is true or false', () => {
+    expect(turn1.evaluateGuess()).to.equal(true)
+    expect(turn2.evaluateGuess()).to.equal(false)
+  })
+
+  it('should have a method that returns feedback on the current guess', () => {
+    expect(turn1.giveFeedback()).to.equal('correct!')
+    expect(turn2.giveFeedback()).to.equal('incorrect!')
+  })
+})
